@@ -11,7 +11,7 @@ interface KeyProps {
 
 export async function rdstationmktRoutes(app: FastifyInstance) {
   app.addHook('preHandler', async (req, reply) => {
-    checkExpiresDateToken();
+    await checkExpiresDateToken();
   })
 
   app.get('/contacts/:id', async (req, reply) => {
@@ -84,6 +84,41 @@ export async function rdstationmktRoutes(app: FastifyInstance) {
       .catch(err => reply.send(err))
     
     const data = await axios.patch(`https://api.rd.services/platform/contacts/${key.operator}:${lead[key.operator]}`, req.body, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(res => res.data).catch(err => {
+      return reply.send(err.response.data);
+    });
+
+    return reply.send(data);
+  })
+
+  app.delete('/contacts/:email', async (req, reply) => {
+    const { token } = await knex('rdstation').select('token').first();
+    let key = {} as KeyProps;
+
+    const paramsContactParamsSchema = z.object({
+      email: z.string().email()
+    })
+
+    const { email } = paramsContactParamsSchema.parse(req.params);
+
+    key = email.includes("@") ?  { 
+      name: "email",
+      operator: "uuid" 
+    }
+    : 
+    { 
+      name: "uuid",
+      operator: "email"
+    };
+  
+    const lead = await axios.get(`http://localhost:3333/rd/contacts/${email}`)
+      .then(res => res.data)
+      .catch(err => reply.send(err))
+  
+      const data = await axios.delete(`https://api.rd.services/platform/contacts/${key.operator}:${lead[key.operator]}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
