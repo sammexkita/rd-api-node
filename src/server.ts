@@ -1,11 +1,4 @@
-import fastify from "fastify";
-import { rdstationmktRoutes } from "./routes/rd";
-
-const app = fastify();
-
-app.register(rdstationmktRoutes, {
-  prefix: 'rd',
-})
+import { app } from "./app";
 
 app.listen({
   port: 3333,
