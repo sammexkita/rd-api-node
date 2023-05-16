@@ -13,11 +13,11 @@ jobs:
     - name: Checkout the files
       uses: actions/checkout@v3 
     
-    - name: Copy files with SSH
+    - name: Copy files with SSHhttps://github.com/sammexkita/rd-api-node/commit/028d194f279b9e1adc67eb81e079b5c240347b7b
       uses: easingthemes/ssh-deploy@main
       env: 
         SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
         SOURCE: "./"
         REMOTE_HOST: "ec2-15-228-167-24.sa-east-1.compute.amazonaws.com"
         REMOTE_USER: "ec2-user"
-        TARGET: "/home/ec2-user"
+        TARGET: "/home/ec2-user/rd-api"
