@@ -11,6 +11,7 @@ const evnSchema = z.object({
   CLIENT_ID: z.string(),
   CLIENT_SECRET: z.string(),
   CODE: z.string(),
+  TOKEN_CRM: z.string(),
 });
 
 const _env = evnSchema.safeParse(process.env);
